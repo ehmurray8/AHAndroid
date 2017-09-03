@@ -37,11 +37,11 @@ public class TVRemoteActivity extends AppCompatActivity {
         EXIT("EXIT", R.id.exit_btn),
         DOWN("DOWN", R.id.down_arrow_btn),
         INFO("INFO", R.id.info_btn),
-        VOL_UP("VOLUME UP", R.id.vol_up_btn),
-        CHAN_UP("CHANNEL UP", R.id.chan_up_btn),
+        VOL_UP("VOLUMEUP", R.id.vol_up_btn),
+        CHAN_UP("CHANNELUP", R.id.chan_up_btn),
         MUTE("MUTE", R.id.mute_btn),
-        VOL_DOWN("VOLUME DOWN", R.id.vol_down_btn),
-        CHAN_DOWN("CHANNEL DOWN", R.id.chan_down_btn);
+        VOL_DOWN("VOLUMEDOWN", R.id.vol_down_btn),
+        CHAN_DOWN("CHANNELDOWN", R.id.chan_down_btn);
 
         private String key;
         private int btnId;
