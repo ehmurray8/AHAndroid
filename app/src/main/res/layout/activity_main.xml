@@ -19,20 +19,20 @@
 
     <Button
         android:id="@+id/tv_btn"
-        android:layout_marginTop="150dp"
-        android:textSize="20sp"
+        android:layout_marginTop="120dp"
+        android:textSize="30sp"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="260dp"
+        android:layout_height="80dp"
         android:text="TV Remote"/>
 
     <Button
         android:id="@+id/sock_btn"
-        android:layout_marginTop="20dp"
-        android:textSize="20sp"
+        android:layout_marginTop="50dp"
+        android:textSize="30sp"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:text="Socket Remote"/>
 
 </LinearLayout>
