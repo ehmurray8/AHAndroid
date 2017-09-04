@@ -19,10 +19,10 @@
 
     <Button
         android:id="@+id/tv_btn"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="75dp"
         android:textSize="30sp"
         android:layout_gravity="center_horizontal"
-        android:layout_width="260dp"
+        android:layout_width="270dp"
         android:layout_height="80dp"
         android:text="TV Remote"/>
 
@@ -31,8 +31,17 @@
         android:layout_marginTop="50dp"
         android:textSize="30sp"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="270dp"
         android:layout_height="80dp"
         android:text="Socket Remote"/>
+
+    <Button
+        android:id="@+id/alarm_btn"
+        android:layout_marginTop="50dp"
+        android:textSize="30sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="270dp"
+        android:layout_height="80dp"
+        android:text="Alarm"/>
 
 </LinearLayout>

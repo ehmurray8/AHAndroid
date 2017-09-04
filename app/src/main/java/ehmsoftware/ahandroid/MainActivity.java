@@ -15,9 +15,11 @@ public class MainActivity extends AppCompatActivity {
 
         Button tvBtn = (Button) findViewById(R.id.tv_btn);
         Button sockBtn = (Button) findViewById(R.id.sock_btn);
+        Button alarmBtn = (Button) findViewById(R.id.alarm_btn);
 
         tvBtn.setOnClickListener(new TVOnClickListener());
         sockBtn.setOnClickListener(new SockOnClickListener());
+        alarmBtn.setOnClickListener(new AlarmListener());
     }
 
     private class TVOnClickListener implements View.OnClickListener {
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent launchSock = new Intent(MainActivity.this, SocketRemoteActivity.class);
             MainActivity.this.startActivity(launchSock);
+        }
+    }
+
+    private class AlarmListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent launchAlarm = new Intent(MainActivity.this, AlarmActivity.class);
+            MainActivity.this.startActivity(launchAlarm);
         }
     }
 }
