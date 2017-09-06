@@ -1,5 +1,10 @@
 package ehmsoftware.ahandroid;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,16 +20,15 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class AlarmActivity extends AppCompatActivity {
 
     private TextView alarmLabel;
-    private static Timer timer = new Timer();
     private static boolean timerSet = false;
     private TimePicker timePicker;
     private static String timeStr = "";
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,9 @@ public class AlarmActivity extends AppCompatActivity {
         this.alarmLabel = (TextView) findViewById(R.id.time_lbl);
         this.alarmLabel.setText(timeStr);
         this.timePicker = (TimePicker) findViewById(R.id.time_picker);
+
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
     }
 
     private class SetAlarm implements View.OnClickListener {
@@ -48,28 +55,27 @@ public class AlarmActivity extends AppCompatActivity {
             int setMin = timePicker.getMinute();
 
             Date date = new Date();
-            Calendar calendar = GregorianCalendar.getInstance();
-            calendar.setTime(date);
-            int currHour = calendar.get(Calendar.HOUR_OF_DAY);
+            Calendar calendarNow = GregorianCalendar.getInstance();
+            calendarNow.setTime(date);
+            int currHour = calendarNow.get(Calendar.HOUR_OF_DAY);
+
+
+            Calendar calendarSet = Calendar.getInstance();
+            calendarSet.set(calendarNow.get(Calendar.YEAR), calendarNow.get(Calendar.MONTH),
+                    calendarNow.get(Calendar.DAY_OF_MONTH), setHour, setMin);
 
             if(currHour > setHour) {
                 //Set for tomorrow
-                date = new Date();
-                date.setHours(setHour);
-                date.setMinutes(setMin);
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                c.add(Calendar.DATE, 1);
-                date = c.getTime();
-            } else {
-                date.setHours(setHour);
-                date.setMinutes(setMin);
+                calendarSet.add(Calendar.DATE, 1);
             }
 
-            if(!timerSet) {
-                timer.cancel();
-                timer.purge();
-                timer = new Timer();
+            long timeToSetMillis = calendarSet.getTimeInMillis();
+
+            if(timerSet) {
+                Intent alarmIntent = new Intent(AlarmActivity.this, AlarmReceiver.class);
+                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, alarmIntent, 0);
+                manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                manager.cancel(pendingIntent);
             }
 
             String ampm = "AM";
@@ -81,15 +87,18 @@ public class AlarmActivity extends AppCompatActivity {
             timeStr = setHour + ":" + String.format("%02d", setMin) + " " + ampm;
             alarmLabel.setText(timeStr);
 
-            timer.schedule(new AlarmTask(), date);
+            manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+            manager.set(AlarmManager.RTC_WAKEUP, timeToSetMillis, pendingIntent);
+
             timerSet = true;
         }
     }
 
-    private class AlarmTask extends TimerTask
-    {
-        public void run()
-        {
+    public class AlarmReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
             new PostMessage().execute();
             timerSet = false;
             timeStr = "";
