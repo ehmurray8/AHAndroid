@@ -1,10 +1,12 @@
 package ehmsoftware.ahandroid;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +25,7 @@ import java.util.GregorianCalendar;
 
 public class AlarmActivity extends AppCompatActivity {
 
-    private TextView alarmLabel;
+    private static TextView alarmLabel;
     private static boolean timerSet = false;
     private TimePicker timePicker;
     private static String timeStr = "";
@@ -38,12 +40,33 @@ public class AlarmActivity extends AppCompatActivity {
         Button setButton = (Button) findViewById(R.id.alarm_btn);
         setButton.setOnClickListener(new SetAlarm());
 
-        this.alarmLabel = (TextView) findViewById(R.id.time_lbl);
-        this.alarmLabel.setText(timeStr);
+        alarmLabel = (TextView) findViewById(R.id.time_lbl);
+        alarmLabel.setText(timeStr);
         this.timePicker = (TimePicker) findViewById(R.id.time_picker);
 
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        SharedPreferences sp = getSharedPreferences("timer_prefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("time_set", timeStr);
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        SharedPreferences sp = getSharedPreferences("timer_prefs", Activity.MODE_PRIVATE);
+        timeStr = sp.getString("time_set", "");
+        alarmLabel.setText(timeStr);
     }
 
     private class SetAlarm implements View.OnClickListener {
@@ -84,6 +107,10 @@ public class AlarmActivity extends AppCompatActivity {
                 setHour -= 12;
             }
 
+            if(setHour == 0) {
+                setHour = 12;
+            }
+
             timeStr = setHour + ":" + String.format("%02d", setMin) + " " + ampm;
             alarmLabel.setText(timeStr);
 
@@ -95,13 +122,18 @@ public class AlarmActivity extends AppCompatActivity {
         }
     }
 
-    public class AlarmReceiver extends BroadcastReceiver {
+    public static class AlarmReceiver extends BroadcastReceiver {
 
+        public AlarmReceiver() {
+            super();
+        }
+    
         @Override
         public void onReceive(Context context, Intent intent) {
             new PostMessage().execute();
             timerSet = false;
             timeStr = "";
+            alarmLabel.setText(timeStr);
         }
     }
 
