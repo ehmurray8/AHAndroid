@@ -1,17 +1,14 @@
 package ehmsoftware.ahandroid;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -26,11 +23,9 @@ import java.util.GregorianCalendar;
 public class AlarmActivity extends AppCompatActivity {
 
     private static TextView alarmLabel;
-    private static boolean timerSet = false;
     private TimePicker timePicker;
+    private EditText musicEt;
     private static String timeStr = "";
-    private PendingIntent pendingIntent;
-    private AlarmManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +37,10 @@ public class AlarmActivity extends AppCompatActivity {
 
         alarmLabel = (TextView) findViewById(R.id.time_lbl);
         alarmLabel.setText(timeStr);
-        this.timePicker = (TimePicker) findViewById(R.id.time_picker);
 
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        musicEt = (EditText) findViewById(R.id.music_txt);
+
+        this.timePicker = (TimePicker) findViewById(R.id.time_picker);
     }
 
     @Override
@@ -94,12 +89,10 @@ public class AlarmActivity extends AppCompatActivity {
 
             long timeToSetMillis = calendarSet.getTimeInMillis();
 
-            if(timerSet) {
-                Intent alarmIntent = new Intent(AlarmActivity.this, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, alarmIntent, 0);
-                manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-                manager.cancel(pendingIntent);
-            }
+            PostMessage post = new PostMessage();
+            post.setTime(timeToSetMillis);
+            post.setMusic(musicEt.getText().toString());
+            post.execute();
 
             String ampm = "AM";
             if(setHour > 12) {
@@ -114,42 +107,40 @@ public class AlarmActivity extends AppCompatActivity {
             timeStr = setHour + ":" + String.format("%02d", setMin) + " " + ampm;
             alarmLabel.setText(timeStr);
 
-            manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
-            manager.set(AlarmManager.RTC_WAKEUP, timeToSetMillis, pendingIntent);
-
-            timerSet = true;
-        }
-    }
-
-    public static class AlarmReceiver extends BroadcastReceiver {
-
-        public AlarmReceiver() {
-            super();
-        }
-    
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            new PostMessage().execute();
-            timerSet = false;
-            timeStr = "";
-            alarmLabel.setText(timeStr);
         }
     }
 
     private static class PostMessage extends AsyncTask<Void, Void, HttpResponse<String>> {
 
+        private static long time = 0;
+        private static String music = "";
+
+        protected void setTime(long t) {
+            time = t;
+        }
+
+        protected void setMusic(String m) {
+            music = m;
+        }
 
         protected HttpResponse<String> doInBackground(Void... socketInfo) {
 
             HttpResponse<String> response = null;
             try {
-                response = Unirest.post("https://rest.ably.io/channels/" + AblyConstants.CHAN_STR
+                Log.v("ALARM SET", "Time: " + time);
+                String body = "{\n\t\"name\":\"Test\",\n\t\"data\": {\"Alarm\":" + time;
+                if(music != "") {
+                    body += ", \"Music\": \"" + music + "\"";
+                }
+                body += "}\n}";
+
+                response = Unirest.post("https://rest.ably.io/channels/" + AblyConstants.ALARM_CHAN_STR
                         + "/messages")
                         .header("content-type", "application/json")
                         .header("authorization", AblyConstants.ABLY_AUTH)
                         .header("cache-control", "no-cache")
-                        .body("{\n\t\"name\":\"Test\",\n\t\"data\": {\"Function Name\":\"Awake\"}\n}")
+                        .body(body)
                         .asString();
             } catch (UnirestException e) {
                 e.printStackTrace();

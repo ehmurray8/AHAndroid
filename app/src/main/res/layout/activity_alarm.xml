@@ -1,48 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ehmsoftware.ahandroid.AlarmActivity"
-    android:padding="15dp">
-
-    <Button
-        android:id="@+id/alarm_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="160dp"
-        android:text="Set Alarm"/>
+    android:orientation="vertical">
 
     <TimePicker
         android:id="@+id/time_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
-
-
-    <TextView
-        android:id="@+id/alarm_lbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/time_picker"
-        android:layout_alignTop="@+id/alarm_btn"
-        android:layout_marginTop="97dp"
-        android:text="Current alarm set for: "
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/time_lbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/alarm_lbl"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/alarm_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:text="Set Alarm"/>
 
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_set"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/alarm_lbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current alarm set for: "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginRight="20dp"/>
+
+        <TextView
+            android:id="@+id/time_lbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="What music would you like to play?"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/music_txt"
+        />
+
+</LinearLayout>

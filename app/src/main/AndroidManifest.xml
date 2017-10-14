@@ -23,7 +23,6 @@
         <activity android:name=".TVRemoteActivity" />
         <activity android:name=".SocketRemoteActivity" />
         <activity android:name=".AlarmActivity"></activity>
-        <receiver android:name=".AlarmActivity$AlarmReceiver"></receiver>
     </application>
 
 </manifest>
