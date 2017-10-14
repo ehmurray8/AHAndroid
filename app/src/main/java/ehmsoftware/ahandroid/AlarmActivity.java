@@ -51,6 +51,7 @@ public class AlarmActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("timer_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("time_set", timeStr);
+        editor.putString("music", musicEt.getText().toString());
         editor.apply();
     }
 
@@ -62,6 +63,7 @@ public class AlarmActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("timer_prefs", Activity.MODE_PRIVATE);
         timeStr = sp.getString("time_set", "");
         alarmLabel.setText(timeStr);
+        musicEt.setText(sp.getString("music", ""));
     }
 
     private class SetAlarm implements View.OnClickListener {
