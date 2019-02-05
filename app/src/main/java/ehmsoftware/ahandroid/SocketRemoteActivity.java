@@ -25,16 +25,16 @@ public class SocketRemoteActivity extends AppCompatActivity {
 
     private enum SocketInfo {
 
-        SOCK1_ON("Socket 1 On", R.id.sock1_on, 1, SockState.ON),
-        SOCK1_OFF("Socket 1 Off", R.id.sock1_off, 1, SockState.OFF),
-        SOCK2_ON("Overhead Light On", R.id.sock2_on, 2, SockState.ON),
-        SOCK2_OFF("Overhead Light Off", R.id.sock2_off, 2, SockState.OFF),
+        SOCK1_ON("TV On", R.id.sock1_on, 1, SockState.ON),
+        SOCK1_OFF("TV Off", R.id.sock1_off, 1, SockState.OFF),
+        SOCK2_ON("Front Light On", R.id.sock2_on, 2, SockState.ON),
+        SOCK2_OFF("Front Light Off", R.id.sock2_off, 2, SockState.OFF),
         SOCK3_ON("Fan On", R.id.sock3_on, 3, SockState.ON),
         SOCK3_OFF("Fan Off", R.id.sock3_off, 3, SockState.OFF),
-        SOCK4_ON("AC On", R.id.sock4_on, 4, SockState.ON),
-        SOCK4_OFF("AC Off", R.id.sock4_off, 4, SockState.OFF),
-        SOCK5_ON("Lamp On", R.id.sock5_on, 5, SockState.ON),
-        SOCK5_OFF("Lamp Off", R.id.sock5_off, 5, SockState.OFF);
+        SOCK4_ON("Left Light On", R.id.sock4_on, 4, SockState.ON),
+        SOCK4_OFF("Left Light Off", R.id.sock4_off, 4, SockState.OFF),
+        SOCK5_ON("Right Light On", R.id.sock5_on, 5, SockState.ON),
+        SOCK5_OFF("Right Light Off", R.id.sock5_off, 5, SockState.OFF);
 
         private String toastString;
         private int btnId;
